@@ -1,0 +1,15 @@
+name: "Create PR To Production"
+
+on:
+  push:
+    branches:
+      - staging/*
+
+jobs:
+  create_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+        gh pr create --base production --head ${{ github.ref_name }} --title "本番リリース" --body ""
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
