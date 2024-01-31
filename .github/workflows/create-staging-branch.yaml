@@ -8,7 +8,7 @@ on:
       - '*.md'
 
 jobs:
-  run:
+  create-branch-and-pr:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,13 +17,13 @@ jobs:
         env:
           TZ: 'Asia/Tokyo'
         run: echo "BRANCH_NAME=staging/$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
-      - name: Create new branch
+      - name: Create staging branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git switch -C ${{ env.BRANCH_NAME }}
           git push -u origin ${{ env.BRANCH_NAME }}
-      - name: Create New PR
+      - name: Create PR to production
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
