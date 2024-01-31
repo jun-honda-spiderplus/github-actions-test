@@ -3,7 +3,7 @@ name: "Create PR To Production"
 on:
   push:
     branches:
-      - staging/*
+      - 'staging/**'
 
 jobs:
   create_pr:
