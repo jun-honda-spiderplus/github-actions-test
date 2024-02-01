@@ -33,7 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "BETA_PR_URL=$(gh pr create --base beta --head main --title "mainからbetaに取り込み" --body "")" >> $GITHUB_ENV
+          echo "BETA_PR_URL=$(gh pr create --base beta --head ${{github.ref_name}} --title "mainの変更をbetaに取り込み" --body "")" >> $GITHUB_ENV
       - name: Merge to beta branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
