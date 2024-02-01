@@ -1,4 +1,4 @@
-name: "Merged To production Branch"
+name: "Merged To Beta Branch"
 
 on:
   pull_request:
