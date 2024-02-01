@@ -33,10 +33,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PR_URL=$(gh pr create --base beta --head main --title "mainからbetaに取り込み" --body "")
-          echo "::set-output name=PR_URL::$PR_URL"
+          echo "BETA_PR_URL=$(gh pr create --base beta --head main --title "mainからbetaに取り込み" --body "")" >> $GITHUB_ENV
       - name: Merge to beta branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr merge ${{steps.crete-pr-to-beta.outputs.PR_URL}} --merge
+          gh pr merge ${{ env.BETA_PR_URL }} --merge
