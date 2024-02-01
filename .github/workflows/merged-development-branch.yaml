@@ -1,4 +1,4 @@
-name: "Create Staging Branch and PR to Production"
+name: "Merged Development Branch"
 
 on:
   push:
@@ -28,3 +28,15 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create --base production --head ${{ env.BRANCH_NAME }} --title "本番リリース" --body ""
+      - name: Create PR to beta
+        id: create-pr-to-beta
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_URL=$(gh pr create --base beta --head main --title "mainからbetaに取り込み" --body "")
+          echo "::set-output name=PR_URL::$PR_URL"
+      - name: Merge to beta branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge ${{steps.crete-pr-to-beta.outputs.PR_URL}} --merge
