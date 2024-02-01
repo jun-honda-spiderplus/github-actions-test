@@ -28,11 +28,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create --base production --head ${{ env.BRANCH_NAME }} --title "本番リリース" --body ""
+      - name: Create PR to beta
+        id: create-pr-to-beta
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "BETA_PR_URL=$(gh pr create --base beta --head main --title "mainからbetaに取り込み" --body "")" >> $GITHUB_ENV
       - name: Merge to beta branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git fetch origin beta
-          git switch beta
-          git merge main
-          git push
+          gh pr merge ${{ env.BETA_PR_URL }} --merge
