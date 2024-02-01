@@ -34,4 +34,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "BETA_PR_URL=$(gh pr create --base beta --head main --title '[Beta] main取り込み' --body '- #${{ github.event.pull_request.number }}')" >> $GITHUB_ENV
+          echo "BETA_PR_URL=$(gh pr create --base beta --head ${{ github.head_ref }} --title '[Beta] ${{ github.event.pull_resuest.title }}' --body '- #${{ github.event.pull_request.number }}')" >> $GITHUB_ENV
