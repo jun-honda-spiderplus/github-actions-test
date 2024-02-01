@@ -1,4 +1,4 @@
-name: "Merged To production Branch"
+name: "Merged To Production Branch"
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
       - closed
 
 jobs:
-  create-branch-and-pr:
+  delete-staging-branch:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
