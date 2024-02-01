@@ -1,4 +1,4 @@
-name: "Merged To main Branch"
+name: "Merged To Main Branch"
 
 on:
   pull_request:
@@ -28,10 +28,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create --base production --head ${{ env.BRANCH_NAME }} --title "本番リリース" --body ""
+          gh pr create --base production --head ${{ env.BRANCH_NAME }} --title "[Prodcution] ${{ github.event.pull_request.title }}" --body "- #${{ github.event.pull_request.number }}"
       - name: Create PR to beta
         id: create-pr-to-beta
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "BETA_PR_URL=$(gh pr create --base beta --head ${{ github.head_ref }} --title '[自動]${{ github.event.pull_request.title }}' --body '#${{ github.event.pull_request.number }}')" >> $GITHUB_ENV
+          echo "BETA_PR_URL=$(gh pr create --base beta --head ${{ github.head_ref }} --title '[Beta] ${{ github.event.pull_request.title }}' --body '- #${{ github.event.pull_request.number }}')" >> $GITHUB_ENV
