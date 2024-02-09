@@ -27,7 +27,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PR_URL=$(gh pr create --base pre-production --head main --title "[Pre-Production] ${{ github.event.pull_request.title }}" --body "- #${{ github.event.pull_request.number }} --label 'auto'")
+          PR_URL=$(gh pr create --base pre-production --head main --title "[Pre-Production] ${{ github.event.pull_request.title }}" --body "- #${{ github.event.pull_request.number }}" --label "auto")
           echo "PULL_REQUEST_URL=$PR_URL" >> $GITHUB_ENV
       - name: Merge PR to pre-production Branch
         env:
