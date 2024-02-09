@@ -1,0 +1,43 @@
+name: "Merged hotfix To Main Branch"
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+# main→pre-productionブランチにPRを作成する
+# main→pre-productionブランチのPRをマージする
+# pre-productionブランチにマージされたら、productionブランチにPRを作成する
+# productionブランチにマージされたら、betaブランチにPRを作成する
+jobs:
+  create_pr:
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'hotfix/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create PR to pre-production Branch
+        id : create-pr-to-pre-production
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_URL=$(gh pr create --base pre-production --head main --title "[Pre-Production] ${{ github.event.pull_request.title }}" --body "- #${{ github.event.pull_request.number }} --label 'auto'")
+          echo "PULL_REQUEST_URL=$PR_URL" >> $GITHUB_ENV
+      - name: Merge PR to pre-production Branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge ${{ steps.create-pr-to-pre-production.outputs.PULL_REQUEST_URL }} --merge
+      - name: Create PR to production
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --base production --head ${{ github.head_ref }} --title "[Production] ${{ github.event.pull_request.title }}" --body "- #${{ github.event.pull_request.number }}"
+      - name: Create PR to beta
+        id: create-pr-to-beta
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --base beta --head ${{ github.head_ref }} --title "[Beta] ${{ github.event.pull_request.title }}" --body "- #${{ github.event.pull_request.number }}"
